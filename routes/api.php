@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ShopController;
 use App\Http\Controllers\Api\TelegramIntegrationController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/shops', [ShopController::class, 'index'])
+    ->name('shops.index');
 
 Route::post('/shops/{shopId}/telegram/connect', [TelegramIntegrationController::class, 'connect'])
     ->whereNumber('shopId')

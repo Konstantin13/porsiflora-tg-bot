@@ -20,6 +20,15 @@ export const styles: Record<string, CSSProperties> = {
         padding: '24px',
         width: '100%',
     },
+    dashboardCard: {
+        background: '#fff',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        boxSizing: 'border-box',
+        maxWidth: '520px',
+        padding: '24px',
+        width: '100%',
+    },
     title: {
         fontFamily: 'Arial, sans-serif',
         fontSize: '24px',
@@ -60,5 +69,13 @@ export const styles: Record<string, CSSProperties> = {
         fontFamily: 'Arial, sans-serif',
         fontSize: '14px',
         margin: '0 0 12px',
+    },
+    shopList: {
+        fontFamily: 'Arial, sans-serif',
+        margin: '0 0 16px',
+        paddingLeft: '20px',
+    },
+    shopListItem: {
+        marginBottom: '6px',
     },
 };

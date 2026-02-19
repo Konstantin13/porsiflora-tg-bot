@@ -38,6 +38,7 @@ Route::get('/dashboard', function (Request $request) {
             'csrfToken' => csrf_token(),
             'userName' => $user->name,
             'logoutAction' => route('logout'),
+            'shopsUrl' => route('shops.index', absolute: false),
         ],
     ]);
 })

@@ -13,6 +13,7 @@ export type DashboardPageData = SharedData & {
     page: 'dashboard';
     userName: string;
     logoutAction: string;
+    shopsUrl: string;
 };
 
 export type PageData = LoginPageData | DashboardPageData;
