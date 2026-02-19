@@ -2,10 +2,10 @@
 
 namespace App\Services\Telegram;
 
+use App\Data\Telegram\TelegramIntegrationStatusData;
 use App\Models\Shop;
 use App\Models\TelegramIntegration;
 use App\Models\TelegramSendLog;
-use Carbon\CarbonInterface;
 
 class TelegramIntegrationService
 {
@@ -26,10 +26,7 @@ class TelegramIntegrationService
         );
     }
 
-    /**
-     * @return array{enabled: bool, chatId: ?string, lastSentAt: ?CarbonInterface, sentCount: int, failedCount: int}
-     */
-    public function status(int $shopId): array
+    public function status(int $shopId): TelegramIntegrationStatusData
     {
         Shop::query()->findOrFail($shopId);
 
@@ -57,13 +54,13 @@ class TelegramIntegrationService
             ->orderByDesc('sent_at')
             ->first()?->sent_at;
 
-        return [
-            'enabled' => $integration?->enabled ?? false,
-            'chatId' => $this->maskChatId($integration?->chat_id),
-            'lastSentAt' => $lastSentAt,
-            'sentCount' => $sentCount,
-            'failedCount' => $failedCount,
-        ];
+        return new TelegramIntegrationStatusData(
+            enabled: $integration?->enabled ?? false,
+            chatId: $this->maskChatId($integration?->chat_id),
+            lastSentAt: $lastSentAt,
+            sentCount: $sentCount,
+            failedCount: $failedCount,
+        );
     }
 
     private function maskChatId(?string $chatId): ?string

@@ -2,10 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Data\Telegram\TelegramIntegrationStatusData;
 use Carbon\CarbonInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property TelegramIntegrationStatusData $resource
+ */
 class TelegramIntegrationStatusResource extends JsonResource
 {
     /**
@@ -13,16 +17,14 @@ class TelegramIntegrationStatusResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $lastSentAt = data_get($this->resource, 'lastSentAt');
-
         return [
-            'enabled' => (bool) data_get($this->resource, 'enabled', false),
-            'chatId' => data_get($this->resource, 'chatId'),
-            'lastSentAt' => $lastSentAt instanceof CarbonInterface
-                ? $lastSentAt->toAtomString()
+            'enabled' => $this->resource->enabled,
+            'chatId' => $this->resource->chatId,
+            'lastSentAt' => $this->resource->lastSentAt instanceof CarbonInterface
+                ? $this->resource->lastSentAt->toAtomString()
                 : null,
-            'sentCount' => (int) data_get($this->resource, 'sentCount', 0),
-            'failedCount' => (int) data_get($this->resource, 'failedCount', 0),
+            'sentCount' => $this->resource->sentCount,
+            'failedCount' => $this->resource->failedCount,
         ];
     }
 }
