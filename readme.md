@@ -11,19 +11,18 @@
 1. Установить PHP-зависимости:
 ```bash
 composer install
+cp .env.example .env
 ```
 2. Поднять контейнеры:
 ```bash
 ./vendor/bin/sail build
-./vendor/bin/sail up -d
+./vendor/bin/sail up -d # дважды в первый раз, нужен running
 ```
-3. Создать `.env` из примера (если файла нет):
-```bash
-cp .env.example .env
-```
+
 4. Сгенерировать ключ приложения:
 ```bash
 ./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate
 ```
 
 Приложение будет доступно по адресу `http://localhost:8080`.
