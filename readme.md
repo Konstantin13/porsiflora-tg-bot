@@ -4,7 +4,7 @@
 
 - Backend: Laravel 12 (PHP 8.2+)
 - Frontend: React + TypeScript (Vite)
-- Основной способ запуска: Laravel Sail (Docker)
+- Основной способ запуска: Laravel Sail (Docker), зап
 
 ## Как запустить backend (Docker / Sail)
 
@@ -26,6 +26,25 @@ cp .env.example .env
 ```
 
 Приложение будет доступно по адресу `http://localhost:8080`.
+
+## Как запустить обычный докер (не протестировано)
+В корне проекта выполните:
+
+cp .env.example .env
+docker compose up -d --build
+docker compose exec app composer install
+docker compose exec app php artisan key:generate
+
+После этого приложение будет на http://localhost:8080 (порт из APP_PORT), БД MySQL на 3307 (из FORWARD_DB_PORT).
+
+Если нужен фронт (Vite), запустите еще:
+
+docker compose run --rm node npm install
+docker compose up -d node
+
+Остановка:
+
+docker compose down
 
 ## Как запустить frontend
 
@@ -59,14 +78,11 @@ cp .env.example .env
 
 ./vendor/bin/sail artisan test tests/Feature/TelegramIntegrationApiTest.php
 
-## API-маршруты
+## Реальная Telegram-отправка или мок-режим
+в .env TELEGRAM_MOCK, если true, то мок, иначе реальная отправка
 
-API из `routes/api.php` зарегистрирован без префикса `/api`.
-Пример: создание заказа доступно по `POST /shops/{shopId}/orders`.
+## список допущений/упрощений
 
-## Полезные команды
-
-- Остановить окружение:
-```bash
-./vendor/bin/sail down
-```
+- Не используются очереди, отправка телеграм синхронная
+- тесты только те что указаны
+- авторизация для api роутов временно отключена (нужна настройка)
