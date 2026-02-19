@@ -55,6 +55,7 @@ docker compose down
 2. Запустить Vite dev-сервер через Sail:
 ```bash
 ./vendor/bin/sail npm run dev -- --host 0.0.0.0 --port 5173
+./vendor/bin/sail npm run build
 ```
 
 ## Как сидятся тестовые данные
