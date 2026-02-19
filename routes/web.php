@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\TelegramIntegrationController;
 use Illuminate\Support\Facades\Route;
 
+Route::view('/', 'app')->name('home');
+
 Route::post('/shops/{shopId}/telegram/connect', [TelegramIntegrationController::class, 'connect'])
     ->whereNumber('shopId')
     ->name('shops.telegram.connect');
