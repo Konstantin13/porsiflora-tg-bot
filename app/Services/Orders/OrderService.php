@@ -22,9 +22,10 @@ class OrderService
     {
         Shop::query()->findOrFail($shopId);
 
-        $order = Order::query()->create([
+        $order = Order::query()->firstOrCreate([
             'shop_id' => $shopId,
             'number' => $payload['number'],
+        ], [
             'total' => $payload['total'],
             'customer_name' => $payload['customerName'],
             'created_at' => now(),
