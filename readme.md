@@ -14,6 +14,7 @@ composer install
 ```
 2. Поднять контейнеры:
 ```bash
+./vendor/bin/sail build
 ./vendor/bin/sail up -d
 ```
 3. Создать `.env` из примера (если файла нет):
