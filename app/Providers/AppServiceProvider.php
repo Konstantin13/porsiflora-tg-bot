@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Contracts\TelegramClient;
+use App\Services\Telegram\HttpTelegramClient;
+use App\Services\Telegram\MockTelegramClient;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(TelegramClient::class, function () {
+            if (config('services.telegram.mock', true)) {
+                return new MockTelegramClient;
+            }
+
+            return new HttpTelegramClient;
+        });
     }
 
     /**
@@ -46,5 +56,7 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null
         );
+
+        JsonResource::withoutWrapping();
     }
 }

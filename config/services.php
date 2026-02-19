@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'telegram' => [
+        'mock' => env('TELEGRAM_MOCK', true),
+        'mock_should_fail' => env('TELEGRAM_MOCK_SHOULD_FAIL', false),
+        'timeout' => env('TELEGRAM_TIMEOUT', 5),
+    ],
+
 ];
