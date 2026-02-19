@@ -1,19 +1,45 @@
 <?php
 
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\TelegramIntegrationController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'app')->name('home');
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
+})->name('home');
 
-Route::post('/shops/{shopId}/telegram/connect', [TelegramIntegrationController::class, 'connect'])
-    ->whereNumber('shopId')
-    ->name('shops.telegram.connect');
+Route::get('/login', function (Request $request) {
+    return view('app', [
+        'title' => 'Авторизация',
+        'appData' => [
+            'page' => 'login',
+            'csrfToken' => csrf_token(),
+            'hasLoginError' => $request->session()->get('errors')?->has('login') ?? false,
+            'oldLogin' => (string) old('login', ''),
+            'loginAction' => route('login.store'),
+        ],
+    ]);
+})
+    ->middleware('guest')
+    ->name('login');
 
-Route::post('/shops/{shopId}/orders', [OrderController::class, 'store'])
-    ->whereNumber('shopId')
-    ->name('shops.orders.store');
+Route::get('/dashboard', function (Request $request) {
+    $user = $request->user();
 
-Route::get('/shops/{shopId}/telegram/status', [TelegramIntegrationController::class, 'status'])
-    ->whereNumber('shopId')
-    ->name('shops.telegram.status');
+    abort_if($user === null, 401);
+
+    return view('app', [
+        'title' => 'Dashboard',
+        'appData' => [
+            'page' => 'dashboard',
+            'csrfToken' => csrf_token(),
+            'userName' => $user->name,
+            'logoutAction' => route('logout'),
+        ],
+    ]);
+})
+    ->middleware('auth')
+    ->name('dashboard');

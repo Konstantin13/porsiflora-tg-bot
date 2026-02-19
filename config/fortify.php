@@ -5,10 +5,10 @@ use Laravel\Fortify\Features;
 return [
     'guard' => 'web',
     'passwords' => 'users',
-    'username' => 'email',
+    'username' => 'login',
     'email' => 'email',
-    'lowercase_usernames' => true,
-    'home' => '/',
+    'lowercase_usernames' => false,
+    'home' => '/dashboard',
     'prefix' => '',
     'domain' => null,
     'middleware' => ['web'],

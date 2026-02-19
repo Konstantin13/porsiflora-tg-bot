@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Features;
 
 test('login screen can be rendered', function () {
@@ -14,7 +15,7 @@ test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
     $response = $this->post(route('login.store'), [
-        'email' => $user->email,
+        'login' => $user->name,
         'password' => 'password',
     ]);
 
@@ -40,8 +41,8 @@ test('users with two factor enabled are redirected to two factor challenge', fun
         'two_factor_confirmed_at' => now(),
     ])->save();
 
-    $response = $this->post(route('login'), [
-        'email' => $user->email,
+    $response = $this->post(route('login.store'), [
+        'login' => $user->name,
         'password' => 'password',
     ]);
 
@@ -54,7 +55,7 @@ test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
     $this->post(route('login.store'), [
-        'email' => $user->email,
+        'login' => $user->name,
         'password' => 'wrong-password',
     ]);
 
@@ -72,11 +73,12 @@ test('users can logout', function () {
 
 test('users are rate limited', function () {
     $user = User::factory()->create();
+    $throttleKey = Str::transliterate(Str::lower($user->name).'|127.0.0.1');
 
-    RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
+    RateLimiter::increment(md5('login'.$throttleKey), amount: 5);
 
     $response = $this->post(route('login.store'), [
-        'email' => $user->email,
+        'login' => $user->name,
         'password' => 'wrong-password',
     ]);
 

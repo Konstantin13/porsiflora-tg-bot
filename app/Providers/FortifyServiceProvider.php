@@ -4,11 +4,14 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -27,6 +30,7 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureActions();
+        $this->configureAuthentication();
         $this->configureRateLimiting();
     }
 
@@ -40,6 +44,31 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
+     * Configure custom authentication with `login` + password.
+     */
+    private function configureAuthentication(): void
+    {
+        Fortify::authenticateUsing(function (Request $request) {
+            $credentials = $request->validate([
+                'login' => ['required', 'string'],
+                'password' => ['required', 'string'],
+            ]);
+
+            $user = User::query()
+                ->where('name', $credentials['login'])
+                ->first();
+
+            if (! $user || ! Hash::check($credentials['password'], $user->password)) {
+                throw ValidationException::withMessages([
+                    'login' => __('auth.failed'),
+                ]);
+            }
+
+            return $user;
+        });
+    }
+
+    /**
      * Configure rate limiting.
      */
     private function configureRateLimiting(): void
@@ -49,7 +78,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower((string) $request->input('login')).'|'.$request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });
