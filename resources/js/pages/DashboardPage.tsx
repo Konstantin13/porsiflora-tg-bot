@@ -73,7 +73,9 @@ export function DashboardPage({ data }: DashboardPageProps) {
                         <ul style={styles.shopList}>
                             {shops.map((shop) => (
                                 <li key={shop.id} style={styles.shopListItem}>
-                                    {shop.id}. {shop.name}
+                                    <a href={`/shops/${shop.id}/growth/telegram`} style={styles.shopLink}>
+                                        {shop.id}. {shop.name}
+                                    </a>
                                 </li>
                             ))}
                         </ul>

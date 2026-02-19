@@ -64,8 +64,25 @@ export const styles: Record<string, CSSProperties> = {
         padding: '10px',
         width: '100%',
     },
+    backButton: {
+        background: 'transparent',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        color: '#111',
+        cursor: 'pointer',
+        display: 'inline-block',
+        fontFamily: 'Arial, sans-serif',
+        marginBottom: '12px',
+        padding: '6px 10px',
+    },
     error: {
         color: '#b00020',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '14px',
+        margin: '0 0 12px',
+    },
+    success: {
+        color: '#0f7a2f',
         fontFamily: 'Arial, sans-serif',
         fontSize: '14px',
         margin: '0 0 12px',
@@ -77,5 +94,29 @@ export const styles: Record<string, CSSProperties> = {
     },
     shopListItem: {
         marginBottom: '6px',
+    },
+    shopLink: {
+        color: '#111',
+        textDecoration: 'none',
+    },
+    statusCard: {
+        background: '#f9f9f9',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        marginTop: '16px',
+        padding: '12px',
+    },
+    hint: {
+        color: '#333',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '14px',
+        margin: '12px 0 0',
+    },
+    checkboxLabel: {
+        alignItems: 'center',
+        display: 'flex',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '14px',
+        gap: '8px',
     },
 };

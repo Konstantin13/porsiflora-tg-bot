@@ -20,5 +20,9 @@ class DatabaseSeeder extends Seeder
                 'password' => 'admin',
             ],
         );
+
+        $this->call([
+            ShopOrderTestSeeder::class,
+        ]);
     }
 }

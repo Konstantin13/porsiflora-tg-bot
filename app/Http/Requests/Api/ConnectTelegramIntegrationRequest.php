@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\TelegramIntegration;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class ConnectTelegramIntegrationRequest extends FormRequest
 {
@@ -18,8 +20,8 @@ class ConnectTelegramIntegrationRequest extends FormRequest
     {
         return [
             'shopId' => ['required', 'integer', 'exists:shops,id'],
-            'botToken' => ['required', 'string', 'regex:/\S/'],
-            'chatId' => ['required', 'string', 'regex:/\S/'],
+            'botToken' => ['nullable', 'string'],
+            'chatId' => ['nullable', 'string'],
             'enabled' => ['required', 'boolean'],
         ];
     }
@@ -30,9 +32,31 @@ class ConnectTelegramIntegrationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'botToken.regex' => 'The botToken field must not be empty.',
-            'chatId.regex' => 'The chatId field must not be empty.',
+            'botToken.required' => 'The botToken field is required when creating a new integration.',
+            'chatId.required' => 'The chatId field is required when creating a new integration.',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $shopId = $this->integer('shopId');
+            $hasExistingIntegration = TelegramIntegration::query()
+                ->where('shop_id', $shopId)
+                ->exists();
+
+            if ($hasExistingIntegration) {
+                return;
+            }
+
+            if ($this->isBlank($this->input('botToken'))) {
+                $validator->errors()->add('botToken', 'The botToken field is required when creating a new integration.');
+            }
+
+            if ($this->isBlank($this->input('chatId'))) {
+                $validator->errors()->add('chatId', 'The chatId field is required when creating a new integration.');
+            }
+        });
     }
 
     protected function prepareForValidation(): void
@@ -42,5 +66,10 @@ class ConnectTelegramIntegrationRequest extends FormRequest
             'botToken' => is_string($this->botToken) ? trim($this->botToken) : $this->botToken,
             'chatId' => is_string($this->chatId) ? trim($this->chatId) : $this->chatId,
         ]);
+    }
+
+    private function isBlank(mixed $value): bool
+    {
+        return ! is_string($value) || trim($value) === '';
     }
 }
