@@ -16,4 +16,14 @@ export type DashboardPageData = SharedData & {
     shopsUrl: string;
 };
 
-export type PageData = LoginPageData | DashboardPageData;
+export type TelegramSettingsPageData = SharedData & {
+    page: 'telegram-settings';
+    shopId: number;
+    shopName: string;
+    backUrl: string;
+    connectUrl: string;
+    statusUrl: string;
+    ordersUrl: string;
+};
+
+export type PageData = LoginPageData | DashboardPageData | TelegramSettingsPageData;

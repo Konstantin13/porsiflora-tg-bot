@@ -10,17 +10,32 @@ use App\Models\TelegramSendLog;
 class TelegramIntegrationService
 {
     /**
-     * @param  array{botToken: string, chatId: string, enabled: bool}  $payload
+     * @param  array{botToken?: string|null, chatId?: string|null, enabled: bool}  $payload
      */
     public function connect(int $shopId, array $payload): TelegramIntegration
     {
         Shop::query()->findOrFail($shopId);
 
+        $integration = TelegramIntegration::query()
+            ->where('shop_id', $shopId)
+            ->first();
+
+        $botToken = is_string($payload['botToken'] ?? null) ? trim($payload['botToken']) : '';
+        $chatId = is_string($payload['chatId'] ?? null) ? trim($payload['chatId']) : '';
+        $isCredentialsBlank = $botToken === '' || $chatId === '';
+
+        if ($integration !== null && $isCredentialsBlank) {
+            $integration->enabled = $payload['enabled'];
+            $integration->save();
+
+            return $integration->refresh();
+        }
+
         return TelegramIntegration::query()->updateOrCreate(
             ['shop_id' => $shopId],
             [
-                'bot_token' => $payload['botToken'],
-                'chat_id' => $payload['chatId'],
+                'bot_token' => $botToken,
+                'chat_id' => $chatId,
                 'enabled' => $payload['enabled'],
             ],
         );
