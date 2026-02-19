@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('customer_name');
             $table->timestamp('created_at')->useCurrent();
 
-            $table->index(['shop_id', 'id']);
+            $table->unique(['shop_id', 'id']);
         });
     }
 
