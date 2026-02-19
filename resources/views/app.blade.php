@@ -6,9 +6,9 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        @vite(['resources/js/app.js'])
+        @vite(['resources/js/app.tsx'])
     </head>
     <body>
-    <div>Hello</div>
+    <div id="app"></div>
     </body>
 </html>

@@ -10,6 +10,9 @@
         "lint": "eslint . --fix"
     },
     "devDependencies": {
+        "@types/react": "^19.1.10",
+        "@types/react-dom": "^19.1.7",
+        "@vitejs/plugin-react": "^4.7.0",
         "@eslint/js": "^9.19.0",
         "@tailwindcss/vite": "^4.1.11",
         "concurrently": "^9.0.1",
@@ -18,10 +21,13 @@
         "eslint-plugin-import": "^2.32.0",
         "prettier": "^3.4.2",
         "prettier-plugin-tailwindcss": "^0.6.11",
+        "typescript": "^5.9.2",
         "vite": "^7.0.4"
     },
     "dependencies": {
         "laravel-vite-plugin": "^2.0.0",
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
         "tailwindcss": "^4.1.1"
     },
     "optionalDependencies": {
