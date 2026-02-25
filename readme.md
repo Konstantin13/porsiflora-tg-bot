@@ -1,5 +1,8 @@
 # Porsiflora TG Bot
 
+Задача - technical-specification.pdf в корне проекта
+Один из главных критериев - скорость выполнения
+
 ## Технологии
 
 - Backend: Laravel 12 (PHP 8.2+)
